@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -10,3 +11,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return 'API';
 });
+
+// Route::get('/', function (HttpRequest $request) {
+
+//     return [
+//         "name" => request()->path(),
+//         'data' => 'API'
+//     ];
+// });
