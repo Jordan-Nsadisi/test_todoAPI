@@ -15,7 +15,7 @@ Route::get('/', function () {
 // Route::get('/', function (HttpRequest $request) {
 
 //     return [
-//         "name" => request()->path(),
+//         "url" => request()->url(),
 //         'data' => 'API'
 //     ];
 // });

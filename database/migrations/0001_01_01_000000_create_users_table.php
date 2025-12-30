@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('firstName', 15); //varchar 15
+            $table->string('lastName', 15); 
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password'); 
+            $table->enum('role', ['ADMIN', 'USER'])->default('USER'); //enum Laravel
             $table->rememberToken();
             $table->timestamps();
         });
+
+        //relation many to many entre users et tasks
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
