@@ -2,49 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tasks;
-use App\Http\Requests\StoreTasksRequest;
-use App\Http\Requests\UpdateTasksRequest;
+use App\Models\Task;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class TasksController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    //read
+    public function index(Request $request)
     {
-        //
+        return response()->json($request->user()->tasks, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTasksRequest $request)
+    // create
+    public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:25',
+            'description' => 'required|string',
+            'status' => 'string|in:PENDING,COMPLETED,CANCELED'
+        ]);
+
+        //gestion des erreurs de validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        //création de la tâche associée à l'utilisateur authentifié
+        $task = $request->user()->tasks()->create($request->all());
+
+        //rafraichir l'instance de la tâche pour obtenir les valeurs par défaut de la BD
+        $task->refresh();
+
+        return response()->json($task, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tasks $tasks)
+    //update
+    public function update(Request $request, $id)
     {
-        //
+        //recupère la task lié au user
+        $task = $request->user()->tasks()->find($id);
+
+        if (!$task) {
+            return response()->json(['message' => 'Tâche non trouvée'], 404);
+        }
+
+        //valide les données si elles sont présentes
+        $request->validate([
+            'title' => 'sometimes|string|max:25',
+            'description' => 'sometimes|string',
+            'status' => 'sometimes|string|in:PENDING,COMPLETED,CANCELED'
+        ]);
+
+        $task->update($request->all());
+
+        return response()->json($task, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTasksRequest $request, Tasks $tasks)
+    //delete
+    public function destroy(Request $request, $id)
     {
-        //
-    }
+        $task = $request->user()->tasks()->find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Tasks $tasks)
-    {
-        //
+        if (!$task) {
+            return response()->json(['message' => 'Tâche non trouvée'], 404);
+        }
+
+        $task->delete();
+        return response()->json(['message' => 'Supprimé avec succès'], 200);
     }
 }
