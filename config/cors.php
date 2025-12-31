@@ -44,7 +44,7 @@ return [
       'exp://127.0.0.1:19000',
 
       //local mode dev mobile
-      'http://192.168.0.0/16',
+      'ajouter api local en dev mobile',
    ],
 
    'allowed_origins_patterns' => [
