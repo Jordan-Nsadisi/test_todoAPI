@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +14,35 @@ class TasksController extends Controller
     public function index(Request $request)
     {
         return response()->json($request->user()->tasks, 200);
+    }
+
+    //récupérer les tâches d'un utilisateur par ID
+    public function getTasksByUserId(Request $request, $userId)
+    {
+        try {
+            $user = User::find($userId);
+
+            if (!$user) {
+                return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+            }
+
+            $tasks = $user->tasks; //récupère les tâches associées à l'utilisateur
+
+            return response()->json([
+                'success' => true,
+                'user' => [
+                    'id' => $user->id,
+                    'firstName' => $user->firstName,
+                    'lastName' => $user->lastName
+                ],
+                'tasks' => $tasks
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des tâches'
+            ], 500);
+        }
     }
 
     // create
