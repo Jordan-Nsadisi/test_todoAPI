@@ -30,11 +30,13 @@ return [
    ][0] === '*' ? ['*'] : explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')),
 
    'allowed_origins_patterns' => [
-      // Pour les tunnels Expo et ngrok
+      //pour les tunnels Expo et ngrok
       '/^https:\/\/.*\.ngrok\.io$/',
       '/^https:\/\/.*\.expo\.io$/',
       '/^https:\/\/.*\.exp\.direct$/',
       '/^exp:\/\/.*$/',
+      //pour Vercel
+      '/^https:\/\/.*\.vercel\.app$/',
    ],
 
    'allowed_headers' => [
