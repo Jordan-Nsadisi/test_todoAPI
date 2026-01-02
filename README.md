@@ -1,59 +1,261 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Todo API 📝
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Une API REST complète pour la gestion de tâches (Todo) développée avec Laravel 11, utilisant SQLite et Laravel Sanctum pour l'authentification.
 
-## About Laravel
+## 🚀 Fonctionnalités
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Authentification** : Inscription, connexion et déconnexion avec tokens JWT via Sanctum
+- **Gestion des tâches** : CRUD complet (Créer, Lire, Modifier, Supprimer)
+- **Filtrage** : Récupération des tâches par utilisateur
+- **Autorisation** : Système de policies pour sécuriser l'accès aux tâches
+- **Base de données** : SQLite pour un déploiement simple
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Technologies utilisées
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel 11** - Framework PHP
+- **SQLite** - Base de données
+- **Laravel Sanctum** - Authentification API
+- **Laravel Policies** - Autorisation
+- **Pest** - Tests
 
-## Learning Laravel
+## ⚡ Installation rapide
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Prérequis
+- PHP 8.2 ou supérieur
+- Composer
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Cloner le projet
+```bash
+git clone <repo-url>
+cd test-todoApi
+```
 
-## Laravel Sponsors
+### 2. Installer les dépendances
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Configuration de l'environnement
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-### Premium Partners
+### 4. Base de données
+```bash
+# Les migrations vont automatiquement créer le fichier SQLite
+php artisan migrate
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Créer les utilisateurs de test
+php artisan db:seed
+```
 
-## Contributing
+### 5. Lancer le serveur
+```bash
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+L'API sera disponible sur `http://127.0.0.1:8000`
 
-## Code of Conduct
+## 👤 Comptes de test
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Après avoir exécuté les seeders, vous aurez accès à ces comptes admin :
 
-## Security Vulnerabilities
+| Nom | Email | Mot de passe | Rôle |
+|-----|--------|-------------|------|
+| Jordan Nsadisi | `astro@test.com` | `admin123` | ADMIN |
+| Monsieur Mukanza | `admin@test.com` | `admin123` | ADMIN |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📚 Documentation API
 
-## License
+### Base URL
+```
+http://127.0.0.1:8000/api
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 🔐 Authentification
+
+#### Inscription
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+    "firstName": "John",
+    "lastName": "Doe", 
+    "email": "john@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+}
+```
+
+**Réponse :**
+```json
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "token_type": "Bearer",
+    "user": {
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john@example.com"
+    }
+}
+```
+
+#### Connexion
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+    "email": "astro@test.com",
+    "password": "admin123"
+}
+```
+
+**Réponse :**
+```json
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "token_type": "Bearer", 
+    "user": {
+        "id": 1,
+        "firstName": "Jordan",
+        "lastName": "Nsadisi",
+        "email": "astro@test.com",
+        "role": "ADMIN"
+    },
+    "message": "user connecté avec succès"
+}
+```
+
+#### Déconnexion
+```http
+POST /auth/logout
+Authorization: Bearer {token}
+```
+
+**Réponse :**
+```json
+{
+    "message": "Déconnexion réussie et token supprimé"
+}
+```
+
+### 👤 Profil utilisateur
+
+#### Récupérer le profil
+```http
+GET /user/profile
+Authorization: Bearer {token}
+```
+
+### ✅ Gestion des tâches
+
+#### Lister toutes les tâches
+```http
+GET /tasks
+Authorization: Bearer {token}
+```
+
+#### Créer une tâche
+```http
+POST /tasks
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+    "title": "Ma nouvelle tâche",
+    "description": "Description de la tâche",
+    "status": "en_cours"
+}
+```
+
+#### Modifier une tâche
+```http
+PUT /tasks/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+    "title": "Tâche modifiée",
+    "description": "Nouvelle description",
+    "status": "terminee"
+}
+```
+
+#### Supprimer une tâche
+```http
+DELETE /tasks/{id}
+Authorization: Bearer {token}
+```
+
+#### Récupérer les tâches d'un utilisateur
+```http
+GET /tasks/user/{userId}
+Authorization: Bearer {token}
+```
+
+## 🔒 Sécurité
+
+- **Authentification** : Laravel Sanctum avec tokens API
+- **Autorisation** : Policies Laravel pour contrôler l'accès aux tâches
+- **Validation** : Validation stricte des données d'entrée
+- **Hachage** : Mots de passe hachés avec bcrypt
+
+## 🗂️ Structure du projet
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── AuthController.php      # Authentification
+│   │   ├── TasksController.php     # Gestion des tâches  
+│   │   └── UserController.php      # Profil utilisateur
+│   └── Requests/                   # Validation des requêtes
+├── Models/
+│   ├── User.php                    # Modèle utilisateur
+│   └── Tasks.php                   # Modèle tâche
+└── Policies/
+    └── TasksPolicy.php             # Autorisations tâches
+
+database/
+├── migrations/                     # Migrations de la BDD
+└── seeders/
+    ├── AdminSeeder.php            # Création des admins
+    └── DatabaseSeeder.php         # Seeder principal
+```
+
+## 🧪 Tests
+
+Exécuter les tests :
+```bash
+php artisan test
+# ou avec Pest
+./vendor/bin/pest
+```
+
+## 📋 Status codes
+
+| Code | Signification |
+|------|---------------|
+| 200 | Succès |
+| 201 | Créé |
+| 400 | Erreur de validation |
+| 401 | Non authentifié |
+| 403 | Non autorisé |
+| 404 | Ressource non trouvée |
+| 500 | Erreur serveur |
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. Commit les changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
+4. Push vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
+5. Ouvrir une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence MIT.
